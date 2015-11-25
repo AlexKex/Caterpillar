@@ -1,12 +1,9 @@
-package caterpillar.controller;
+package caterpillar;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -44,8 +41,8 @@ public class Caterpillar extends Application {
     private void initRootLayout(){
         try{
             // Load root layout from fxml file.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Caterpillar.class.getResource("../view/scheme.fxml"));
+            System.err.println("FXML resource: " + System.getProperty("user.dir"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/scheme.fxml"));
             this.rootLayout = loader.load();
             this.rootLayout.setAlignment(Pos.CENTER);
         }

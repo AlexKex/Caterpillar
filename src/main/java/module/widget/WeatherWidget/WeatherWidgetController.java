@@ -53,7 +53,7 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
         this.model.prepareData();
 
         this.loader = new FXMLLoader();
-        this.loader.setLocation(this.getClass().getResource("WeatherWidgetView.fxml"));
+        this.loader.setLocation(getClass().getResource("/fxml/WeatherWidgetView.fxml"));
     }
 
     @Override
