@@ -15,6 +15,7 @@ public class WeatherWidgetModel {
     public WeatherWidgetModel(){
         // TODO собирать данные от пользователя
         this.myServiceModule = new WeatherService("Moscow");
+        this.data = new HashMap<>();
     }
 
     /**
@@ -24,19 +25,34 @@ public class WeatherWidgetModel {
     public void prepareData() throws IOException {
         try {
             this.myServiceModule.requestWeather();
-            //this.setData("weatherCity", this.myServiceModule);
+
+            this.data.put("city", this.myServiceModule.getWeatherCity());
+            this.data.put("lat", this.myServiceModule.getLatitude());
+            this.data.put("lon", this.myServiceModule.getLongitude());
+            this.data.put("temperature_celsius", this.myServiceModule.getTemperatureCelsius());
+            this.data.put("temperature_fahrenheit", this.myServiceModule.getTemperatureFahrenheit());
+            this.data.put("icon", this.myServiceModule.getIconRef());
+            this.data.put("pressure", this.myServiceModule.getPressure());
+            this.data.put("humidity", this.myServiceModule.getHumidity());
         } catch (IOException e) {
-            // TODO выводить человекопонятную инфу
             e.printStackTrace();
         }
     }
 
-    /**
-     * add smth do data container
-     * @param key
-     * @param value
-     */
-    public void setData(String key, Object value){
-        this.data.put(key, value);
+    public Object getData(String key) throws NoSuchFieldException {
+        Object value;
+
+        if(this.data.containsKey(key)){
+            value = this.data.get(key);
+        }
+        else{
+            throw new NoSuchFieldException("No such key in data array");
+        }
+
+        return value;
+    }
+
+    public WeatherService getMyServiceModule(){
+        return this.myServiceModule;
     }
 }

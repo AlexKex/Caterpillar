@@ -13,9 +13,6 @@ import java.io.IOException;
  * Created by apryakhin on 29.10.2015.
  */
 public abstract class Widget extends Module implements widgetInterface {
-    protected Module myServiceModule;
-    protected Object Data;
-
     protected int standard_height   = 240;
     protected int standard_width    = 240;
 
@@ -32,10 +29,6 @@ public abstract class Widget extends Module implements widgetInterface {
     @Override
     public void expand() {
 
-    }
-
-    public Object getData(){
-        return Data;
     }
 
     public void setData(){

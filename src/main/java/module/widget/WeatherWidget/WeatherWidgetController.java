@@ -6,6 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -20,8 +22,6 @@ import java.util.HashMap;
  * Created by apryakhin on 28.10.2015.
  */
 public class WeatherWidgetController extends Widget implements widgetInterface {
-    protected WeatherService myServiceModule;
-    protected HashMap<String, Object> data;
     protected Scene scene;
     protected WeatherWidgetModel model;
 
@@ -29,11 +29,9 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
 
     public WeatherWidgetController() throws IOException {
         String searchCity = "Moscow"; // TODO change to user's selection
-        this.myServiceModule = new WeatherService(searchCity);
         this.model = new WeatherWidgetModel();
 
         this.createDesktopModule();
-        this.data = new HashMap<>();
     }
 
     public void render() {
@@ -60,8 +58,22 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
     public Pane getWidget() throws IOException {
         Pane panel = this.loader.load();
 
-        Label label = new Label("Weather widget");
-        panel.getChildren().add(label);
+        try{
+            ImageView weather_icon = new ImageView(new Image(this.model.getData("icon").toString()));
+            panel.getChildren().add(weather_icon);
+
+            Double celsius = (Double) this.model.getData("temperature_celsius");
+            Label weather_celsius = new Label(Integer.toString(celsius.intValue()) + " C");
+            panel.getChildren().add(weather_celsius);
+
+            Double fahrenheit = (Double) this.model.getData("temperature_fahrenheit");
+            Label weather_fahrenheit = new Label(Integer.toString(fahrenheit.intValue()) + " F");
+            panel.getChildren().add(weather_fahrenheit);
+        }
+        catch(NoSuchFieldException e){
+            System.out.println(e.getMessage());
+        }
+
 
         return panel;
     }
