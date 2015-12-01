@@ -35,13 +35,13 @@ public class Caterpillar extends Application {
 
         Scene scene = new Scene(this.rootLayout, 800, 480);
         this.primaryStage.setScene(scene);
+        this.primaryStage.getScene().getStylesheets().add("/css/main.css");
         this.primaryStage.show();
     }
 
     private void initRootLayout(){
         try{
             // Load root layout from fxml file.
-            System.err.println("FXML resource: " + System.getProperty("user.dir"));
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/scheme.fxml"));
             this.rootLayout = loader.load();
             this.rootLayout.setAlignment(Pos.CENTER);

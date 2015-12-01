@@ -57,6 +57,7 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
     @Override
     public Pane getWidget() throws IOException {
         Pane panel = this.loader.load();
+        panel.getStylesheets().add("/css/WeatherWidgetStyle.css");
 
         try{
             ImageView weather_icon = new ImageView(new Image(this.model.getData("icon").toString()));
