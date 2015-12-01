@@ -15,6 +15,7 @@ import module.iface.widgetInterface;
 import module.service.WeatherService;
 import module.widget.Widget;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -57,9 +58,9 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
     @Override
     public Pane getWidget() throws IOException {
         Pane panel = this.loader.load();
-        panel.getStylesheets().add("/css/WeatherWidgetStyle.css");
-
         try{
+            panel.getStylesheets().add("/css/WeatherWidgetStyle.css");
+
             ImageView weather_icon = new ImageView(new Image(this.model.getData("icon").toString()));
             panel.getChildren().add(weather_icon);
 
@@ -72,9 +73,11 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
             panel.getChildren().add(weather_fahrenheit);
         }
         catch(NoSuchFieldException e){
-            System.out.println(e.getMessage());
+            System.out.println("NoSuchFieldException " + e.getMessage());
         }
-
+        catch (Exception e){
+            System.out.println("Unknown exception " + e.getMessage());
+        }
 
         return panel;
     }
@@ -96,6 +99,5 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
      */
     protected void prepareWidget(){
         System.out.println("Preparing widget");
-
     }
 }
