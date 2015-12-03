@@ -34,8 +34,21 @@ public class WeatherWidgetModel {
             this.data.put("icon", this.myServiceModule.getIconRef());
             this.data.put("pressure", this.myServiceModule.getPressure());
             this.data.put("humidity", this.myServiceModule.getHumidity());
+            this.data.put("date", this.myServiceModule.requestDate);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void refreshData() throws IOException {
+        try {
+            this.prepareData();
+        }
+        catch(IOException e){
+            System.out.println("IOException " + e.getMessage());
+        }
+        catch(Exception e){
+            System.out.println("Exception " + e.getMessage());
         }
     }
 

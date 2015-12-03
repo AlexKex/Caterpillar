@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by apryakhin on 05.11.2015.
@@ -29,6 +30,8 @@ public class WeatherService extends Module implements serviceModuleInterface {
     protected double pressure;
     protected int humidity;
     protected String icon_ref;
+
+    public Date requestDate;
 
     public WeatherService(String searchCity){
         this.searchCity = searchCity;
@@ -66,6 +69,7 @@ public class WeatherService extends Module implements serviceModuleInterface {
         myExchangeObject.setTarget(this.urlRequest);
         myExchangeObject.createRequest();
         this.jsonResponse = myExchangeObject.getContent();
+        System.out.println("I'm looking for weather!");
     }
 
     protected void proceedResponse(){
@@ -106,6 +110,10 @@ public class WeatherService extends Module implements serviceModuleInterface {
             JSONObject weather_object = (JSONObject) weather_array.get(0);
 
             this.icon_ref = this.icons_base + weather_object.getString("icon") + ".png";
+
+            this.requestDate = new Date(System.currentTimeMillis());
+
+            System.out.println("Date : " + this.requestDate + " | temp is " + this.temperature_celsius);
         }
         catch (Exception e){
             System.out.println(e.getMessage());

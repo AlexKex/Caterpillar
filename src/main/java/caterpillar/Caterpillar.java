@@ -69,10 +69,15 @@ public class Caterpillar extends Application {
                 while(iterator.hasNext()){
                     Map.Entry<String, Widget> pair = iterator.next();
 
-                    Pane widget = pair.getValue().getWidget();
+                    Widget widget = pair.getValue();
+                    if(widget.isReloadable()){
+                        widget.setTimer();
+                    }
+
+                    Pane widget_pane = pair.getValue().getWidget();
 
                     // Set person overview into the center of root layout.
-                    this.rootLayout.add(widget, 0, 0);
+                    this.rootLayout.add(widget_pane, 0, 0);
                 }
             }
         } catch (IOException e) {
