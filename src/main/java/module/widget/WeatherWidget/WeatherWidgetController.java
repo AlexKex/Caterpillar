@@ -28,7 +28,7 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
     protected WeatherWidgetModel model;
 
     protected FXMLLoader loader;
-    protected Pane widget_pane;
+    protected GridPane widget_pane;
 
     // info lines
     protected Label weather_label;
@@ -67,14 +67,15 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
     @Override
     public Pane getWidget() throws IOException {
         this.widget_pane = this.loader.load();
+        this.widget_pane.getStyleClass().addAll("grid");
         this.widget_pane.getStylesheets().add("/css/WeatherWidgetStyle.css");
 
         try{
-            this.icon = new ImageView(new Image(this.model.getData("icon").toString()));
-            this.widget_pane.getChildren().add(this.icon);
-
             this.weather_label = new Label(this.getWeatherLabelText());
-            this.widget_pane.getChildren().add(this.weather_label);
+            this.widget_pane.add(this.weather_label, 0, 1);
+
+            this.icon = new ImageView(new Image(this.model.getData("icon").toString()));
+            this.widget_pane.add(this.icon, 0, 3);
         }
         catch(NoSuchFieldException e){
             System.out.println(e.getMessage());
