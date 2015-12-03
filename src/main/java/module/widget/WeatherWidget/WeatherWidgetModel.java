@@ -36,7 +36,7 @@ public class WeatherWidgetModel {
             this.data.put("humidity", this.myServiceModule.getHumidity());
             this.data.put("date", this.myServiceModule.requestDate);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Exception " + e.getMessage());
         }
     }
 
