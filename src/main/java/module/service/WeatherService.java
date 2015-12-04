@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -31,7 +32,7 @@ public class WeatherService extends Module implements serviceModuleInterface {
     protected int humidity;
     protected String icon_ref;
 
-    public Date requestDate;
+    public String requestDate;
 
     public WeatherService(String searchCity){
         this.searchCity = searchCity;
@@ -111,7 +112,8 @@ public class WeatherService extends Module implements serviceModuleInterface {
 
             this.icon_ref = this.icons_base + weather_object.getString("icon") + ".png";
 
-            this.requestDate = new Date(System.currentTimeMillis());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.mm.yy HH:mm");
+            this.requestDate = dateFormat.format( new Date() );
 
             System.out.println("Date : " + this.requestDate + " | temp is " + this.temperature_celsius);
         }

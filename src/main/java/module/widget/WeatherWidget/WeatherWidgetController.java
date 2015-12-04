@@ -33,6 +33,7 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
     // info lines
     protected Label weather_label;
     protected ImageView icon;
+    protected Label time_label;
 
     public WeatherWidgetController() throws IOException {
         String searchCity = "Moscow"; // TODO change to user's selection
@@ -71,7 +72,12 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
         this.widget_pane.getStylesheets().add("/css/WeatherWidgetStyle.css");
 
         try{
-            this.weather_label = new Label(this.getWeatherLabelText());
+            String[] labels = this.getWeatherLabelText();
+
+            this.time_label = new Label(labels[0]);
+            this.widget_pane.add(this.time_label, 0, 0);
+
+            this.weather_label = new Label(labels[1]);
             this.widget_pane.add(this.weather_label, 0, 1);
 
             this.icon = new ImageView(new Image(this.model.getData("icon").toString()));
@@ -99,7 +105,11 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
     public void renewWidget() throws IOException {
         try {
             this.model.refreshData();
-            this.weather_label.setText(this.getWeatherLabelText());
+
+            String[] labels = this.getWeatherLabelText();
+
+            this.time_label.setText(labels[0]);
+            this.weather_label.setText(labels[1]);
         }
         catch (Exception e){
             System.out.println("Exception in " + e.getClass() + " : " + e.getMessage());
@@ -117,18 +127,20 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
         System.out.println("Preparing widget");
     }
 
-    private String getWeatherLabelText() throws NoSuchFieldException {
-        String weather_label_text = null;
+    private String[] getWeatherLabelText() throws NoSuchFieldException {
+        String[] weather_labels = new String[3];
 
         try {
+            weather_labels[0] = "Last update on " + this.model.getData("date");
+
             Double celsius = (Double) this.model.getData("temperature_celsius");
             Double fahrenheit = (Double) this.model.getData("temperature_fahrenheit");
-            weather_label_text = Integer.toString(celsius.intValue()) + " C | " + Integer.toString(fahrenheit.intValue()) + " F" + " | " + this.model.getData("date");
+            weather_labels[1] = Integer.toString(celsius.intValue()) + " C | " + Integer.toString(fahrenheit.intValue()) + " F";
         }
         catch (NoSuchFieldException e){
             System.out.println("NoSuchFieldException at " + e.getClass() + " : " + e.getMessage());
         }
 
-        return weather_label_text;
+        return weather_labels;
     }
 }
