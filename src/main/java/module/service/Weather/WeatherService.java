@@ -1,19 +1,22 @@
-package module.service;
+package module.service.Weather;
 
 import module.Module;
 import module.iface.serviceModuleInterface;
+import module.service.ExchangeService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by apryakhin on 05.11.2015.
  */
 public class WeatherService extends Module implements serviceModuleInterface {
-    protected String base = "http://api.openweathermap.org/data/2.5/weather?q=";
+    protected String base = "http://api.openweathermap.org/data/2.5/";
+    protected String get_parameters;
     protected String key  = "appid=997b6111d6996259c286d92520b9d6ab";
     protected String icons_base = "http://openweathermap.org/img/w/";
 
@@ -32,24 +35,31 @@ public class WeatherService extends Module implements serviceModuleInterface {
     protected int humidity;
     protected String icon_ref;
 
+    protected WeatherHour[] hourlyForecast;
+    protected WeatherDay[] dailyForecast;
+
     public String requestDate;
 
     public WeatherService(String searchCity){
         this.searchCity = searchCity;
     }
 
-    public void requestWeather() throws IOException {
+    public void requestWeather(String request_type) throws IOException {
+        this.request_type = request_type;
+
         switch (this.request_type){
             case "weather":
-                this.urlRequest = this.base + this.searchCity + "&" + this.key;
+                this.get_parameters = "?q=" + this.searchCity + "&" + this.key;
                 break;
             case "forecast":
-                // TODO implement forecast logic
+                this.get_parameters = "?q=" + this.searchCity + "&" + this.key;
                 break;
             default:
-                this.urlRequest = this.base + this.searchCity + "&" + this.key;
+
                 break;
         }
+
+        this.buildURL();
 
         this.getResponse();
         this.proceedResponse();
@@ -94,6 +104,12 @@ public class WeatherService extends Module implements serviceModuleInterface {
         }
     }
 
+    public void buildURL(){
+        this.urlRequest = this.base + this.request_type + this.get_parameters;
+
+        System.out.println(this.urlRequest);
+    }
+
     private void proceedWeatherResponse(JSONObject response){
         try {
             this.weatherCity = response.getString("name");
@@ -122,5 +138,9 @@ public class WeatherService extends Module implements serviceModuleInterface {
         }
     }
 
-    private void proceedWeatherForecastResponse(JSONObject response){}
+    private void proceedWeatherForecastResponse(JSONObject response){
+
+    }
+
+    private void proceedWeatherWeeklyForecastResponse(JSONObject response){}
 }

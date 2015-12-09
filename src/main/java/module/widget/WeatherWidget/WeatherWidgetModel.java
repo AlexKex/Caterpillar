@@ -1,6 +1,6 @@
 package module.widget.WeatherWidget;
 
-import module.service.WeatherService;
+import module.service.Weather.WeatherService;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public class WeatherWidgetModel {
      */
     public void prepareData() throws IOException {
         try {
-            this.myServiceModule.requestWeather();
+            this.myServiceModule.requestWeather("weather");
 
             this.data.put("city", this.myServiceModule.getWeatherCity());
             this.data.put("lat", this.myServiceModule.getLatitude());
@@ -35,6 +35,10 @@ public class WeatherWidgetModel {
             this.data.put("pressure", this.myServiceModule.getPressure());
             this.data.put("humidity", this.myServiceModule.getHumidity());
             this.data.put("date", this.myServiceModule.requestDate);
+
+            this.myServiceModule.requestWeather("forecast");
+
+            //this.myServiceModule.getForecast();
         } catch (IOException e) {
             System.out.println("Exception " + e.getMessage());
         }
