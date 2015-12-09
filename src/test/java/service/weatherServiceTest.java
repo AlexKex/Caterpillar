@@ -1,6 +1,6 @@
 package service;
 
-import module.service.WeatherService;
+import module.service.Weather.WeatherService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
@@ -21,7 +21,7 @@ public class weatherServiceTest {
     @Before
     public void prepareTestData() throws IOException {
         this.service = new WeatherService("Moscow");
-        this.service.requestWeather();
+        this.service.requestWeather("weather");
     }
 
     @Test

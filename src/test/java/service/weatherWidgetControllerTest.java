@@ -1,13 +1,11 @@
 package service;
 
-import module.service.WeatherService;
+import module.service.Weather.WeatherService;
 import module.widget.WeatherWidget.WeatherWidgetController;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Date;
 
 /**
  * Created by apryakhin on 03.12.2015.
