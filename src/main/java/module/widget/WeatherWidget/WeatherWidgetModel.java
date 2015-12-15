@@ -39,8 +39,8 @@ public class WeatherWidgetModel {
             this.myServiceModule.requestWeather("forecast");
 
             //this.myServiceModule.getForecast();
-        } catch (IOException e) {
-            System.out.println("Exception " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Undefined exception " + e.getMessage());
         }
     }
 

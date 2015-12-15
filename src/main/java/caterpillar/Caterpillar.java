@@ -21,7 +21,12 @@ public class Caterpillar extends Application {
     private Map<String, Widget> components;
 
     public static void main(String[] args) {
-        launch(args);
+        try {
+            launch(args);
+        }
+        catch (Exception e){
+            System.out.println("Main load exception : " + e.getMessage());
+        }
     }
 
     @Override
