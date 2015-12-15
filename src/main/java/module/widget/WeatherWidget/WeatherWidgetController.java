@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import module.iface.widgetInterface;
+import module.service.Weather.WeatherHour;
 import module.widget.Widget;
 
 import java.io.IOException;
@@ -23,6 +24,8 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
 
     protected FXMLLoader loader;
     protected GridPane widget_pane;
+    protected GridPane hourly_forecast_pane;
+    protected GridPane daily_forecast_pane;
 
     // info lines
     protected Label weather_label;
@@ -66,16 +69,9 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
         this.widget_pane.getStylesheets().add("/css/WeatherWidgetStyle.css");
 
         try{
-            String[] labels = this.getWeatherLabelText();
-
-            this.time_label = new Label(labels[0]);
-            this.widget_pane.add(this.time_label, 0, 0);
-
-            this.weather_label = new Label(labels[1]);
-            this.widget_pane.add(this.weather_label, 0, 1);
-
-            this.icon = new ImageView(new Image(this.model.getData("icon").toString()));
-            this.widget_pane.add(this.icon, 0, 3);
+            this.assembleMainInformationBlock();
+            this.assembleHourlyForecastBlock();
+            this.assembleDailyForecastBlock();
         }
         catch(NoSuchFieldException e){
             System.out.println(e.getMessage());
@@ -96,6 +92,10 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
         return this.loader;
     }
 
+    /**
+     * renew widget
+     * @throws IOException
+     */
     public void renewWidget() throws IOException {
         try {
             this.model.refreshData();
@@ -136,5 +136,64 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
         }
 
         return weather_labels;
+    }
+
+    /**
+     * Collect info about current weather to widget
+     * @throws NoSuchFieldException
+     */
+    private void assembleMainInformationBlock() throws NoSuchFieldException{
+        String[] labels = this.getWeatherLabelText();
+
+        this.time_label = new Label(labels[0]);
+        this.widget_pane.add(this.time_label, 0, 0);
+
+        this.weather_label = new Label(labels[1]);
+        this.widget_pane.add(this.weather_label, 0, 1);
+
+        this.icon = new ImageView(new Image(this.model.getData("icon").toString()));
+        this.widget_pane.add(this.icon, 0, 3);
+    }
+
+    /**
+     * Collect info about hourly forecast to widget
+     */
+    private void assembleHourlyForecastBlock() throws IOException{
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/WeatherHourlyForecastView.fxml"));
+
+        this.hourly_forecast_pane = loader.load();
+
+        WeatherHour[] forecast = this.model.getMyServiceModule().getHourlyForecast();
+
+        for(int i = 0; i < forecast.length; i++){
+            FXMLLoader item_loader = new FXMLLoader();
+            item_loader.setLocation(getClass().getResource("/fxml/WeatherForecastItemView.fxml"));
+            GridPane item_pane = item_loader.load();
+
+            Label time_label = new Label(forecast[i].getItemLabel());
+            item_pane.add(time_label, 0, 0);
+
+            Double celsius = forecast[i].getTemperatureCelsius();
+            Double fahrenheit = forecast[i].getTemperatureFahrenheit();
+            Label weather_label = new Label(
+                    celsius.intValue() + " C | " + fahrenheit.intValue() + " F"
+            );
+            item_pane.add(weather_label, 0, 1);
+
+            ImageView icon = new ImageView(new Image(forecast[i].getIconRef()));
+            item_pane.add(icon, 0, 3);
+
+            this.hourly_forecast_pane.add(item_pane, i, 0);
+        }
+
+        this.widget_pane.add(this.hourly_forecast_pane, 0, 4);
+    }
+
+    /**
+     * Collect info about daily forecast to widget
+     */
+    private void assembleDailyForecastBlock(){
+
     }
 }
