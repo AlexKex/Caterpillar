@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import module.iface.widgetInterface;
+import module.service.Weather.WeatherForecastItem;
 import module.service.Weather.WeatherHour;
 import module.widget.Widget;
 
@@ -169,20 +170,8 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
         for(int i = 0; i < forecast.length; i++){
             FXMLLoader item_loader = new FXMLLoader();
             item_loader.setLocation(getClass().getResource("/fxml/WeatherForecastItemView.fxml"));
-            GridPane item_pane = item_loader.load();
 
-            Label time_label = new Label(forecast[i].getItemLabel());
-            item_pane.add(time_label, 0, 0);
-
-            Double celsius = forecast[i].getTemperatureCelsius();
-            Double fahrenheit = forecast[i].getTemperatureFahrenheit();
-            Label weather_label = new Label(
-                    celsius.intValue() + " C | " + fahrenheit.intValue() + " F"
-            );
-            item_pane.add(weather_label, 0, 1);
-
-            ImageView icon = new ImageView(new Image(forecast[i].getIconRef()));
-            item_pane.add(icon, 0, 3);
+            GridPane item_pane = WeatherForecastItem.getForecastPane(item_loader, forecast[i]);
 
             this.hourly_forecast_pane.add(item_pane, i, 0);
         }
