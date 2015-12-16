@@ -9,6 +9,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.security.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -94,7 +99,6 @@ public class WeatherService extends Module implements serviceModuleInterface {
     public String   getIconRef()                { return this.icon_ref; }
     public static String   getIconsBase()       { return WeatherService.icons_base; }
 
-
     protected void getResponse() {
         try{
             ExchangeService myExchangeObject = new ExchangeService();
@@ -169,30 +173,68 @@ public class WeatherService extends Module implements serviceModuleInterface {
     }
 
     private void proceedWeatherForecastResponse(JSONObject response){
-        try{
+          try{
             JSONArray data_list = response.getJSONArray("list");
 
-            Date date = new Date();
-            long timestamp = date.getTime() / 1000;
-            int day     = 0; // counter for daily forecast
-            int hour    = 0; // counter for hourly forecast
-
-            for(int i = 0; i < data_list.length(); i++){
-                JSONObject weather_object = (JSONObject) data_list.get(i);
-
-                int forecast_time = weather_object.getInt("dt");
-                if(hour < this.hourlyForecast.length){
-                    this.hourlyForecast[hour] = new WeatherHour(weather_object);
-                    hour++;
-                }
-            }
+            this.collectHourlyData(data_list);
+            //this.collectDailyData(data_list);
         }
         catch (Exception e){
             System.out.println(e.getMessage());
         }
     }
 
-    private void proceedWeatherWeeklyForecastResponse(JSONObject response){}
+    private void collectHourlyData(JSONArray data_list) throws Exception {
+        int hour    = 0; // counter for hourly forecast
+
+        if(data_list.length() == 0){
+            throw new Exception("Empty JSONArray given during collectHourlyData() in " + this.getClass().toString());
+        }
+
+        for(int i = 0; i < this.hourlyForecast.length; i++){
+            JSONObject weather_object = (JSONObject) data_list.get(i);
+
+            if(hour < this.hourlyForecast.length){
+                this.hourlyForecast[hour] = new WeatherHour(weather_object);
+                hour++;
+            }
+        }
+    }
+
+    private void collectDailyData(JSONArray data_list) throws Exception {
+        int prev_day = 0;
+
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        int year = currentTime.getYear();
+        int month = currentTime.getMonthValue();
+        int day_of_month = currentTime.getDayOfMonth();
+
+        if(data_list.length() == 0){
+            throw new Exception("Empty JSONArray given during collectDailyData() in " + this.getClass().toString());
+        }
+
+        // filter forecast items for forecast count
+        for(int i = 0; i < this.dailyForecast.length;){
+            JSONObject forecast_object = (JSONObject) data_list.get(i);
+
+            // for what date this item of forecast is
+            String forecast_string_date = forecast_object.getString("dt_txt");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime date_of_item = LocalDateTime.parse(forecast_string_date, formatter);
+
+            boolean is_suitable_for_forecast = false;
+
+            if(date_of_item.getHour() == 12){
+                is_suitable_for_forecast = true;
+            }
+
+            /*if(is_suitable_for_forecast){
+                System.out.println(forecast_object);
+                this.dailyForecast[i++] = new WeatherDay(forecast_object);
+            }*/
+        }
+    }
 
     public WeatherHour[] getHourlyForecast() {
         return hourlyForecast;
