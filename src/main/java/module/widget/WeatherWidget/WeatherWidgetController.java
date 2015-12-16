@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import module.iface.widgetInterface;
+import module.service.Weather.WeatherDay;
 import module.service.Weather.WeatherForecastItem;
 import module.service.Weather.WeatherHour;
 import module.widget.Widget;
@@ -160,10 +161,10 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
      * Collect info about hourly forecast to widget
      */
     private void assembleHourlyForecastBlock() throws IOException{
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/fxml/WeatherHourlyForecastView.fxml"));
+        FXMLLoader hourly_loader = new FXMLLoader();
+        hourly_loader.setLocation(getClass().getResource("/fxml/WeatherHourlyForecastView.fxml"));
 
-        this.hourly_forecast_pane = loader.load();
+        this.hourly_forecast_pane = hourly_loader.load();
 
         WeatherHour[] forecast = this.model.getMyServiceModule().getHourlyForecast();
 
@@ -182,7 +183,12 @@ public class WeatherWidgetController extends Widget implements widgetInterface {
     /**
      * Collect info about daily forecast to widget
      */
-    private void assembleDailyForecastBlock(){
+    private void assembleDailyForecastBlock() throws IOException {
+        FXMLLoader daily_loader = new FXMLLoader();
+        daily_loader.setLocation(getClass().getResource("/fxml/WeatherDailyForecastView.fxml"));
 
+        this.daily_forecast_pane = daily_loader.load();
+
+        WeatherDay[] forecast = this.model.getMyServiceModule().getDailyForecast();
     }
 }
