@@ -57,7 +57,7 @@ public class Caterpillar extends Application {
     }
 
     private void prepareComponents() {
-        // TODO автоматизировать сбор модулей
+        // TODO собирать модули с сервера на основании ключа
         try {
             this.components = new HashMap<>();
             this.components.put("WeatherWidget", new WeatherWidgetController());

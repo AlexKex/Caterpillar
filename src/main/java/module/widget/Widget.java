@@ -47,6 +47,9 @@ public abstract class Widget extends Module implements widgetInterface {
 
     }
 
+    /**
+     * timer for widget data update
+     */
     @Override
     public void setTimer() {
         this.widget_timer = new Timer();
