@@ -61,3 +61,6 @@ $RECYCLE.BIN/
 .idea/
 
 target/
+
+plugins/
+jar/

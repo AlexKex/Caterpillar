@@ -1,5 +1,6 @@
 package caterpillar;
 
+import iface.Plugable;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -7,18 +8,16 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import module.widget.WeatherWidget.WeatherWidgetController;
-import module.widget.Widget;
+import utils.Module;
+import utils.plugin.PluginFactory;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 public class Caterpillar extends Application {
     private Stage primaryStage;
     private GridPane rootLayout;
-    private Map<String, Widget> components;
+    private ArrayList<String> components = new ArrayList<>();
 
     public static void main(String[] args) {
         try {
@@ -26,6 +25,7 @@ public class Caterpillar extends Application {
         }
         catch (Exception e){
             System.out.println("Main load exception : " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -59,38 +59,31 @@ public class Caterpillar extends Application {
     private void prepareComponents() {
         // TODO собирать модули с сервера на основании ключа
         try {
-            this.components = new HashMap<>();
-            this.components.put("WeatherWidget", new WeatherWidgetController());
-        } catch (IOException e) {
+            //this.components.put("WeatherWidget", new WeatherWidgetController());
+            this.components.add("WeatherWidget");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void renderComponents() {
         try {
-            if(this.components.size() > 0){
-                Iterator<Map.Entry<String, Widget>> iterator = this.components.entrySet().iterator();
+                    ArrayList<Plugable> plugins = PluginFactory.getPlugins();
 
-                while(iterator.hasNext()){
-                    Map.Entry<String, Widget> pair = iterator.next();
+                    for (Plugable p : plugins) {
+                        Plugable widget = p.run();
 
-                    Widget widget = pair.getValue();
-                    if(widget.isReloadable()){
-                        widget.setTimer();
+                        if (widget.isReloadable()) {
+                            widget.setTimer();
+                        }
+
+                        Pane widget_pane = widget.getWidget();
+
+                        this.rootLayout.add(widget_pane, 0, 0);
                     }
-
-                    Pane widget_pane = pair.getValue().getWidget();
-
-                    // Set person overview into the center of root layout.
-                    this.rootLayout.add(widget_pane, 0, 0);
-                }
+            } catch (MalformedURLException e1) {
+                e1.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-    }
-
-
-
 
 }

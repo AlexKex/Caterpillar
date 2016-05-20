@@ -1,4 +1,4 @@
-package module.iface;
+package utils.iface;
 
 /**
  * Created by apryakhin on 05.11.2015.
